@@ -1,4 +1,5 @@
 #import library
+from urllib import response
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
@@ -52,10 +53,26 @@ identitas ={} #variabel global , dictionary = json
 class ContohResource(Resource):
     #method get dan post
     def get(self):
-        # response = kurung kurawal
-        # "msg":"Hallo dunia, ini appp restfull ku"
-        # kurung kurawal
-        return identitas  #response
+        #menampilkan data dari database sqlite
+        query = ModelDatabase.query.all()
+        # melakukan iterasi pada model database dengan teknik
+        output = [
+            {
+                "nama":data.nama, 
+                "email":data.email,
+                "notel":data.notel,
+                "alamat":data.alamat
+                
+            } 
+            for data in query
+        ]
+        response = {
+            "code": 200,
+            "msg": "Query data sukses",
+            "data": output
+        }
+
+        return response, 200  #response
 
     def post(self):
         dataNama = request.form["nama"]
